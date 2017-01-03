@@ -1,6 +1,6 @@
 // Copyright 2017 Nick Vellios. All rights reserved.
-// Use of this source code is governed by the Unlicense.
-// Unlicense. For more information, please refer to http://unlicense.org/
+// Use of this source code is governed by the Unlicense license.
+// For more information, please refer to http://unlicense.org/
 
 // Package jwt is a barebones JSON Web Token implementation in Go
 //

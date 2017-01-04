@@ -63,6 +63,9 @@ func Generate(claim map[string]string, exp int) string {
 // Decode decodes a JWT and returns the payload as a map[string]string.
 func Decode(jwt string) (map[string]string, error) {
 	parts := strings.Split(jwt, ".")
+	if len(parts) != 3 {
+		return nil, errors.New("Invalid JWT Structure")
+	}
 	header, _ := base64.StdEncoding.DecodeString(parts[0])
 	payload, _ := base64.StdEncoding.DecodeString(parts[1])
 	signature, _ := base64.StdEncoding.DecodeString(parts[2])

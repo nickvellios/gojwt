@@ -11,7 +11,6 @@ package jwt
 
 import (
 	"crypto/hmac"
-	"crypto/md5"
 	"crypto/sha256"
 	"encoding/base64"
 	"encoding/hex"
@@ -52,7 +51,7 @@ func Generate(claim map[string]string, exp int) string {
 	}
 	payload := base64.StdEncoding.EncodeToString([]byte(pl2))
 	// Create a new secret from our salt and the paylod json string.
-	secret := md5wrapper(salt + string(pl2))
+	secret := sha256wrapper(salt + string(pl2))
 	// Build signature with the new secret and base64 encode it.
 	hash := hmac256(header+"."+payload, secret)
 	signature := base64.StdEncoding.EncodeToString([]byte(hash))
@@ -92,7 +91,7 @@ func Decode(jwt string) (map[string]string, error) {
 		return nil, errors.New("Expired JWT")
 	}
 	// This probably should be one of the first checks, preceeding the date check.  If the signature of the JWT doesn't match there is likely fuckery afoot
-	ha := hmac256(string(parts[0])+"."+string(parts[1]), md5wrapper(salt+string(payload)))
+	ha := hmac256(string(parts[0])+"."+string(parts[1]), sha256wrapper(salt+string(payload)))
 	if ha != string(signature) {
 		return nil, errors.New("Invalid JWT signature")
 	}
@@ -131,8 +130,8 @@ func hmac256(message, secret string) string {
 	return base64.StdEncoding.EncodeToString(h.Sum(nil))
 }
 
-func md5wrapper(text string) string {
-	hasher := md5.New()
+func sha256wrapper(text string) string {
+	hasher := sha256.New()
 	hasher.Write([]byte(text))
 	return hex.EncodeToString(hasher.Sum(nil))
 }
